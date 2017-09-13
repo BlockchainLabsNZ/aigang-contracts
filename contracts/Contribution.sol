@@ -306,7 +306,7 @@ contract Contribution is Controlled, TokenController {
       return;
     }
 
-    ERC20 token = ERC20(_token);
+    MiniMeToken token = MiniMeToken(_token);
     uint256 balance = token.balanceOf(this);
     token.transfer(controller, balance);
     ClaimedTokens(_token, controller, balance);
