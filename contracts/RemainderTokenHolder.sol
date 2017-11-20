@@ -7,8 +7,8 @@ import "./ERC20.sol";
 contract RemainderTokenHolder is Controlled {
   using SafeMath for uint256;
 
-  Contribution contribution;
-  ERC20 aix;
+  Contribution public contribution;
+  ERC20 public aix;
 
   function RemainderTokenHolder(address _controller, address _contribution, address _aix) {
     controller = _controller;

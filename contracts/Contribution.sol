@@ -1,5 +1,13 @@
 pragma solidity ^0.4.15;
 
+/**
+ * @title Aigang Contribution contract
+ *
+ *  By contributing ETH to this smart contract you agree to the following terms and conditions:
+ *  https://github.com/AigangNetwork/aigang-crowdsale-contracts/Aigang-T&Cs(171020_clean).docx
+ *
+ */
+
 import "./SafeMath.sol";
 import "./ERC20.sol";
 import "./MiniMeToken.sol";
@@ -44,19 +52,19 @@ contract Contribution is Controlled, TokenController {
   bool public paused;
 
   modifier initialized() {
-    assert(initializedBlock != 0);
+    require(initializedBlock != 0);
     _;
   }
 
   modifier contributionOpen() {
     // collector can start depositing 2 days prior
     if (msg.sender == collector) {
-      assert(getBlockTimestamp().add(2 days) >= startTime);
+      require(getBlockTimestamp().add(2 days) >= startTime);
     } else {
-      assert(getBlockTimestamp() >= startTime);
+      require(getBlockTimestamp() >= startTime);
     }
-    assert(getBlockTimestamp() <= endTime);
-    assert(finalizedTime == 0);
+    require(getBlockTimestamp() <= endTime);
+    require(finalizedTime == 0);
     _;
   }
 
@@ -183,7 +191,7 @@ contract Contribution is Controlled, TokenController {
       return 2300;
     }
 
-    if (collectedAfter24Hours <= thirtyPercentWithBonus) {
+    if (collectedAfter24Hours <= twentyPercentWithBonus + thirtyPercentWithBonus) {
       // 10% Bonus
       return 2200;
     }
@@ -286,7 +294,9 @@ contract Contribution is Controlled, TokenController {
     require(msg.sender == controller || getBlockTimestamp() > endTime || weiToCollect() == 0);
 
     // remainder will be minted and locked for 1 year.
-    aix.generateTokens(remainderHolder, weiToCollect().mul(2000));
+    // This was decided to be removed.
+    // aix.generateTokens(remainderHolder, weiToCollect().mul(2000));
+
     // AIX generated so far is 51% of total
     uint256 tokenCap = aix.totalSupply().mul(100).div(51);
     // dev Wallet will have 20% of the total Tokens and will be able to retrieve quarterly.
